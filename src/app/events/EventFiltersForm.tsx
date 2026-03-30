@@ -54,6 +54,8 @@ export function EventFiltersForm({ currentFilters }: EventFiltersFormProps): Rea
   // Efecto para auto-submit cuando cambia el texto debounced
   useEffect(() => {
     // Saltamos el primer render para evitar submit al cargar la página
+
+  
     if (isFirstRender.current) {
       isFirstRender.current = false;
       return;
@@ -62,6 +64,20 @@ export function EventFiltersForm({ currentFilters }: EventFiltersFormProps): Rea
     // Enviamos el formulario programáticamente
     formRef.current?.requestSubmit();
   }, [debouncedSearch]);
+
+
+  useEffect(() => {
+    setSearchTerm(currentFilters.search ?? '');
+
+    if (formRef.current) {
+      const form = formRef.current;
+      (form.elements.namedItem('category') as HTMLSelectElement).value = currentFilters.category ?? '';
+      (form.elements.namedItem('status') as HTMLSelectElement).value = currentFilters.status ?? '';
+      (form.elements.namedItem('priceMax') as HTMLSelectElement).value = currentFilters.priceMax?.toString() ?? '';
+    }
+  }, [currentFilters]);
+
+
 
   // Handler para auto-submit de selects
   const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
